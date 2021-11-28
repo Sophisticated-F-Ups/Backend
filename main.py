@@ -11,6 +11,10 @@ from sumy.summarizers.lex_rank import LexRankSummarizer
 
 app = FastAPI()
 
+@app.get('/')
+async def home():
+    return {'response': 'success'}
+
 # Receive video file from client and get the file extension using fastapi
 @app.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_file(file: UploadFile = File(...)):
