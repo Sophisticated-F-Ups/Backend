@@ -5,6 +5,10 @@ import requests
 
 app = FastAPI()
 
+@app.get("/")
+def home():
+    return {"message": "Hello World"}
+
 # Receive video file from client and get the file extension using fastapi
 @app.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_file(file: UploadFile = File(...)):
