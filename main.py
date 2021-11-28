@@ -2,12 +2,16 @@ from fastapi import FastAPI, File, UploadFile, status
 import os
 from dotenv import load_dotenv
 import requests
+import nltk
+nltk.download('punkt')
+import math
+import sumy
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lex_rank import LexRankSummarizer
+import json
 
 app = FastAPI()
-
-@app.get("/")
-def home():
-    return {"message": "Hello World"}
 
 # Receive video file from client and get the file extension using fastapi
 @app.post("/upload", status_code=status.HTTP_201_CREATED)
@@ -31,7 +35,25 @@ async def upload_file(file: UploadFile = File(...)):
         index += 1
         response = get_text(file[0], file[1])
     print("Requests to assemblyAI: {index} times done")
+    response.update({'summerize': summerize(response['text'])})
     return response
+
+def summerize(original_text):
+    text_list = original_text.split()
+
+    num_words = len(text_list)
+
+    count = math.ceil(num_words/70)
+
+    my_parser = PlaintextParser.from_string(original_text,Tokenizer('english'))
+
+    lex_rank_summarizer = LexRankSummarizer()
+    lexrank_summary = lex_rank_summarizer(my_parser.document,sentences_count=count)
+
+    sentences = ''
+    for sentence in lexrank_summary:
+        sentences = sentences + str(sentence)
+    return sentences
 
 def upload_file(fileObj):
     '''
