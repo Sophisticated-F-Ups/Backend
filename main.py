@@ -5,11 +5,9 @@ import requests
 import nltk
 nltk.download('punkt')
 import math
-import sumy
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
-import json
 
 app = FastAPI()
 
