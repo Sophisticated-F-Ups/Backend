@@ -36,8 +36,9 @@ async def upload_file(file: UploadFile = File(...)):
     while response["status"] != 'completed':
         index += 1
         response = get_text(file[0], file[1])
-    print("Requests to assemblyAI: {index} times done")
+    print(f"Requests to assemblyAI: {index} times done")
     response.update({'summerize': summerize(response['text'])})
+    print(response)
     return response
 
 def summerize(original_text):
